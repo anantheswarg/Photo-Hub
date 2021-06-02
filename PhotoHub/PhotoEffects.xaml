@@ -1,0 +1,298 @@
+﻿<phone:PhoneApplicationPage
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+    xmlns:local="clr-namespace:PhotoHub" 
+    xmlns:System="clr-namespace:System;assembly=mscorlib" 
+    x:Class="PhotoHub.PhotoEffects"
+    SupportedOrientations="Portrait" Orientation="Portrait"
+    mc:Ignorable="d" d:DesignHeight="800" d:DesignWidth="480"
+    shell:SystemTray.IsVisible="False">
+    
+    <phone:PhoneApplicationPage.Resources>
+
+        <shell:ApplicationBar x:Name="DefaultAppBar" IsVisible="True" IsMenuEnabled="False">
+
+                <shell:ApplicationBarIconButton IconUri="/Static/Icons/save.png" Text="save" Click="ApplicationBarButtonSave_Click"/>
+                <shell:ApplicationBarIconButton IconUri="/Static/Icons/Facebook.png" Text="share" Click="ApplicationBarBtnFacebook_Click"/>
+                <shell:ApplicationBarIconButton IconUri="/Static/Icons/Flickr.png" Text="share" Click="ApplicationBarButtonFlickr_Click"/>
+        
+        </shell:ApplicationBar>
+
+        <!-- Storyboard for image flip horizontal. Flips the image with origin 
+             as centre. Hides the toolbox panel and the default panel-->
+        <Storyboard x:Name="ImageFlipVertical" Completed="Animation_Completed">
+            <PointAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransformOrigin)" Storyboard.TargetName="GrdImage">
+        		<EasingPointKeyFrame KeyTime="0" Value="0.5,0.5"/>
+                <EasingPointKeyFrame KeyTime="0:0:0.5" Value="0.5,0.5"/>
+        	</PointAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)" Storyboard.TargetName="GrdImage">
+                <EasingDoubleKeyFrame x:Name="InitialYFrame" KeyTime="0" Value="1"/>
+                <EasingDoubleKeyFrame x:Name="FinalYFrame" KeyTime="0:0:0.5" Value="-1"/>
+        	</DoubleAnimationUsingKeyFrames>
+            
+        	
+        	<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Control.IsEnabled)" Storyboard.TargetName="LsbToolBox">
+        		<DiscreteObjectKeyFrame KeyTime="0">
+        			<DiscreteObjectKeyFrame.Value>
+        				<System:Boolean>False</System:Boolean>
+        			</DiscreteObjectKeyFrame.Value>
+        		</DiscreteObjectKeyFrame>
+        		<DiscreteObjectKeyFrame KeyTime="0:0:0.5">
+        			<DiscreteObjectKeyFrame.Value>
+        				<System:Boolean>True</System:Boolean>
+        			</DiscreteObjectKeyFrame.Value>
+        		</DiscreteObjectKeyFrame>
+        	</ObjectAnimationUsingKeyFrames>
+        	
+        	
+        </Storyboard>
+
+        <!--<Storyboard x:Name="ImageFlipVerticalToOriginal">
+            <PointAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransformOrigin)" Storyboard.TargetName="GrdImage">
+                <EasingPointKeyFrame KeyTime="0" Value="0.5,0.5"/>
+                <EasingPointKeyFrame KeyTime="0:0:0" Value="0.5,0.5"/>
+            </PointAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)" Storyboard.TargetName="GrdImage">
+                <EasingDoubleKeyFrame x:Name="InitialYFrame1" KeyTime="0" Value="1"/>
+                <EasingDoubleKeyFrame x:Name="FinalYFrame1" KeyTime="0:0:1" Value="-1"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>-->
+
+        <!-- Storyboard for image flip vertical. Flips the image with origin 
+             as centre. Hides the toolbox panel and the default panel-->
+        <Storyboard x:Name="ImageFlipHorizontal" Completed="Animation_Completed" >
+            <PointAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransformOrigin)" Storyboard.TargetName="GrdImage">
+        		<EasingPointKeyFrame KeyTime="0" Value="0.5,0.5"/>
+        		<EasingPointKeyFrame KeyTime="0:0:0.5" Value="0.5,0.5"/>
+        	</PointAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="GrdImage">
+                <EasingDoubleKeyFrame x:Name="InitialXFrame" KeyTime="0" Value="1"/>
+                <EasingDoubleKeyFrame x:Name="FinalXFrame" KeyTime="0:0:0.5" Value="-1"/>
+        	</DoubleAnimationUsingKeyFrames>
+            
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Control.IsEnabled)" Storyboard.TargetName="LsbToolBox">
+            	<DiscreteObjectKeyFrame KeyTime="0">
+            		<DiscreteObjectKeyFrame.Value>
+            			<System:Boolean>False</System:Boolean>
+            		</DiscreteObjectKeyFrame.Value>
+            	</DiscreteObjectKeyFrame>
+            	<DiscreteObjectKeyFrame KeyTime="0:0:0.5">
+            		<DiscreteObjectKeyFrame.Value>
+            			<System:Boolean>True</System:Boolean>
+            		</DiscreteObjectKeyFrame.Value>
+            	</DiscreteObjectKeyFrame>
+            </ObjectAnimationUsingKeyFrames>
+        </Storyboard>
+
+        <!--<Storyboard x:Name="ImageFlipHorizontalToOriginal">
+            <PointAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransformOrigin)" Storyboard.TargetName="GrdImage">
+                <EasingPointKeyFrame KeyTime="0" Value="0.5,0.5"/>
+                <EasingPointKeyFrame KeyTime="0:0:0" Value="0.5,0.5"/>
+            </PointAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="GrdImage">
+                <EasingDoubleKeyFrame x:Name="InitialXFrame1" KeyTime="0" Value="1"/>
+                <EasingDoubleKeyFrame x:Name="FinalXFrame1" KeyTime="0:0:0" Value="-1"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>-->
+
+        <!-- Storyboard for image Rotation. Rotates the image with origin 
+             as centre. Hides the toolbox panel and the default panel-->
+        <Storyboard x:Name="Rotate" Completed="Animation_Completed">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.Rotation)" Storyboard.TargetName="GrdImage">
+                <EasingDoubleKeyFrame x:Name="InitialRotationFrame" KeyTime="0" />
+                <EasingDoubleKeyFrame x:Name="FinalRotationFrame" KeyTime="0:0:0.5" />
+            </DoubleAnimationUsingKeyFrames>
+
+            <PointAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransformOrigin)" Storyboard.TargetName="GrdImage">
+                <EasingPointKeyFrame KeyTime="0" Value="0.5,0.5"/>
+                <EasingPointKeyFrame KeyTime="0:0:0.5" Value="0.5,0.5"/>
+            </PointAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Control.IsEnabled)" Storyboard.TargetName="LsbToolBox">
+                <DiscreteObjectKeyFrame KeyTime="0">
+                    <DiscreteObjectKeyFrame.Value>
+                        <System:Boolean>False</System:Boolean>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.5">
+                    <DiscreteObjectKeyFrame.Value>
+                        <System:Boolean>True</System:Boolean>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+            </ObjectAnimationUsingKeyFrames>
+        </Storyboard>
+
+        <!--<Storyboard x:Name="RotateToOriginal">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.Rotation)" Storyboard.TargetName="GrdImage">
+                <EasingDoubleKeyFrame x:Name="InitialRotationFrame1" KeyTime="0" />
+                <EasingDoubleKeyFrame x:Name="FinalRotationFrame1" KeyTime="0:0:0" />
+            </DoubleAnimationUsingKeyFrames>
+
+            <PointAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransformOrigin)" Storyboard.TargetName="GrdImage">
+                <EasingPointKeyFrame KeyTime="0" Value="0.5,0.5"/>
+                <EasingPointKeyFrame KeyTime="0:0:0" Value="0.5,0.5"/>
+            </PointAnimationUsingKeyFrames>
+        </Storyboard>-->
+
+    </phone:PhoneApplicationPage.Resources>
+    
+	<phone:PhoneApplicationPage.FontFamily>
+		<StaticResource ResourceKey="PhoneFontFamilyNormal"/>
+	</phone:PhoneApplicationPage.FontFamily>
+	<phone:PhoneApplicationPage.FontSize>
+		<StaticResource ResourceKey="PhoneFontSizeNormal"/>
+	</phone:PhoneApplicationPage.FontSize>
+	<phone:PhoneApplicationPage.Foreground>
+		<StaticResource ResourceKey="PhoneForegroundBrush"/>
+	</phone:PhoneApplicationPage.Foreground>
+
+    <!--LayoutRoot is the root grid where all page content is placed-->
+    <Grid  >
+        <Grid.Background>
+            
+            
+            <ImageBrush Stretch="Fill" ImageSource="Static/Backgrounds/defaultbackground.png"/>
+        </Grid.Background>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        
+        <!--TitlePanel contains the name of the application and page title-->
+        <StackPanel Grid.Row="0" Margin="12,5,0,5">
+            <TextBlock Text="PHOTO HUB" Margin="5" Foreground="White" />
+            <!--<TextBlock x:Name="PageTitle" Text="page name" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>-->
+        </StackPanel>
+
+        <!--Grid that encapsulates the content for the page -->
+        <Grid Grid.Row="1" Margin="12,0,12,0">
+            
+            <Grid >
+                <Grid.RowDefinitions >
+                    <!-- the first row is for storing the image. size is fixed so as to leave the space for work area -->
+                    <RowDefinition Height="100"/>
+                    <!-- contains the defult grid -->
+                    <RowDefinition Height="450"/>
+                    <!-- contains the levels grid -->
+                    <RowDefinition Height="100"/>
+
+                </Grid.RowDefinitions>
+
+                <ScrollViewer VerticalScrollBarVisibility="Disabled">
+                <!-- List box that holds the initial pallette items -->
+                <Border BorderThickness="0,2" BorderBrush="AntiqueWhite"  >
+                        <ListBox x:Name="LsbToolBox" Grid.Row="0" ItemContainerStyle="{StaticResource ToolBoxButtonContainerStyle}" SelectionChanged="LsbToolBox_SelectionChanged" HorizontalAlignment="Left"  ScrollViewer.HorizontalScrollBarVisibility="auto" ScrollViewer.VerticalScrollBarVisibility="Disabled" Background="Transparent"  VerticalAlignment="Center" >
+                    <!--<ListBox.ItemTemplate  >
+                        <DataTemplate >
+                                   
+                                <Grid x:Name="GrdToolBoxButton">
+
+                                        
+                                        
+                                        <Border x:Name="BorderOfImage" BorderBrush="AntiqueWhite" BorderThickness="0">
+                                            <Grid>
+                                                
+                                                <Image Margin="10" Width="64" Height="64" Source="{Binding ImageSource}" Tag="{Binding Tag}" />
+
+                                                <Rectangle Margin="10" Fill="{Binding Color}" ></Rectangle>
+                                            </Grid>
+                                        </Border>
+                                    </Grid>
+                            </DataTemplate>
+                    </ListBox.ItemTemplate>-->
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate  >
+                            <VirtualizingStackPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                </ListBox>
+
+                    </Border>
+                </ScrollViewer>
+                <!-- Grid that holds the image to be modified -->
+                <Grid x:Name="GrdImageMorph" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,10">
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="450"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="450"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <Grid x:Name="GrdImage" RenderTransformOrigin="-1,-1" Margin="0,10">
+
+                        <Image x:Name="ImgInput" >
+                            <!--<i:Interaction.Behaviors>
+                    		    <tb:MultiTouchBehavior IsTranslateXEnabled="False" IsTranslateYEnabled="False" IsRotateEnabled="False" MaximumScale="2"/>
+                    	    </i:Interaction.Behaviors>-->
+
+                            <!--<Image.RenderTransform>
+                                <CompositeTransform x:Name="ImageFlip" />
+                            </Image.RenderTransform>-->
+
+                        </Image>
+                        <!-- Ink presenter that is used in the pencil effe c-->
+                        <InkPresenter x:Name="InkSignature" MouseLeftButtonUp="InkSignature_MouseLeftButtonUp" MouseLeftButtonDown="InkSignature_MouseLeftButtonDown" MouseMove="InkSignature_MouseMove" Visibility="Collapsed"  Background="Transparent" />
+
+                        <!--<Rectangle Grid.Row="0" x:Name="RectCrop" Visibility="Collapsed" Stroke="Aqua" />-->
+
+                        <Grid.RenderTransform>
+                            <CompositeTransform />
+                        </Grid.RenderTransform>
+
+                    </Grid>
+
+                </Grid>
+
+                <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Disabled" >
+
+                    <Border x:Name="BorderPreview" BorderThickness="0,2" BorderBrush="AntiqueWhite" Visibility="Collapsed" >
+                        <ListBox x:Name="LsbPreview" ItemContainerStyle="{StaticResource PreviewButtonContainerStyle}" Grid.Row="2" SelectionChanged="LsbPreview_SelectionChanged" HorizontalAlignment="Left"  ScrollViewer.HorizontalScrollBarVisibility="auto" ScrollViewer.VerticalScrollBarVisibility="Disabled" Background="Transparent" VerticalAlignment="Bottom" >
+                            <!--<ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Image Margin="10" Width="80" Height="80" Source="{Binding ImageSource}"  />
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>-->
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <VirtualizingStackPanel Orientation="Horizontal"/>
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+                        </ListBox>
+                    </Border>
+                </ScrollViewer>
+            </Grid>
+            
+            <!--ContentGrid - contains the content for the page -->
+        </Grid>
+
+        <ProgressBar x:Name="ProgressBar" Style="{StaticResource PerformanceProgressBar}" IsIndeterminate="True" Height="50" Grid.Row="1" Visibility="Collapsed" Width="450" VerticalAlignment="Center" />
+
+
+        <!--<Grid x:Name="EffectsGrid" Grid.Row="2">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="60"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="120"/>
+                <ColumnDefinition Width="250"/>
+                <ColumnDefinition Width="110"/>
+            </Grid.ColumnDefinitions>
+
+        </Grid>-->
+
+    </Grid>
+
+    <!-- ApplicationBar -->
+    
+
+            
+</phone:PhoneApplicationPage>

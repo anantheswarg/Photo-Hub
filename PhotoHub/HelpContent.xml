@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<helpitems>
+  <help>
+    <item name="PhotoHub">
+      <Home>
+        Home page displays the latest 10 pictures from Camera roll, Sample pictures and Saved pictures albums in a pivot. Click on the picture to edit it. Select camera option to capture a picture using camera. Select gallery option to select photo from picture albums
+      </Home>
+      <PhotoEffects>
+        Pencil:
+To draw with different color and pencil width combination, select pencil from toolbox, then select color and pencil width, start drawing
+Effects:
+To apply different types of effects, select Effect from toolbox and choose effect from the preview panel
+Rotate:
+To rotate the picture in horizontal and vertical, select Rotate from the toolbox
+Flip:
+To flip the picture in clockwise and anti-clockwise, select Flip from the toolbox
+Brightness &amp; Contrast:
+To apply brightness and contrast, Select Brightness/ Contrast from the toolbox and choose from the preview panel
+Blur:
+To apply Blur, select Blur option from the toolbox and choose from the preview panel
+      </PhotoEffects>
+      <Share>
+        Share feature lets you upload the picture to Facebook and Flickr. Select Facebook/ Flickr button from the application bar (at the bottom of the page) to upload the picture to Facebook/ Flickr. To upload, you have to authenticate yourself with valid credentials
+      </Share>
+      <Disclaimer>
+        Disclaimer content goes here....
+      </Disclaimer>
+    </item>
+  </help>
+</helpitems>

@@ -1,0 +1,364 @@
+﻿<Application 
+    x:Class="PhotoHub.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"       
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:vsm="clr-namespace:System.Windows;assembly=System.Windows"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:local="clr-namespace:PhotoHub" >
+
+    <!--Application Resources-->
+    <Application.Resources>
+
+        <shell:ApplicationBar x:Name="EffectAppBar" IsVisible="True" IsMenuEnabled="False">
+
+            <shell:ApplicationBarIconButton x:Name="ApplicationBarButtonDone" IconUri="/Static/Icons/done.png" Text="done" />
+            <shell:ApplicationBarIconButton x:Name="ApplicationBarButtonCancel" IconUri="/Static/Icons/cancel.png" Text="cancel" />
+        </shell:ApplicationBar>
+
+
+        <ControlTemplate x:Key="PhoneSimpleRepeatButton" TargetType="RepeatButton">
+            <Rectangle/>
+        </ControlTemplate>
+
+        <ControlTemplate x:Key="PhoneSimpleThumbHorizontal" TargetType="Thumb">
+            <Border Background="Transparent" Margin="0,0">
+                <Rectangle Width="30" Height="70" Fill="Black" Opacity="0.5"/>
+            </Border>
+        </ControlTemplate>
+
+        <ControlTemplate x:Key="PhoneSimpleThumbVertical" TargetType="Thumb">
+            <Border Background="Transparent" Margin="-6,-800">
+                <Rectangle Width="10" Height="2" Margin="24,0,0,0" Fill="{StaticResource PhoneForegroundBrush}"/>
+            </Border>
+        </ControlTemplate>
+
+        <Style x:Key="sliderStyle" TargetType="local:PhoneSlider">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Maximum" Value="10"/>
+            <Setter Property="Minimum" Value="0"/>
+            <Setter Property="Value" Value="0"/>
+            <Setter Property="Margin" Value="{StaticResource PhoneHorizontalMargin}"/>
+            <Setter Property="Background" Value="{StaticResource PhoneContrastBackgroundBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource PhoneAccentBrush}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="local:PhoneSlider">
+                        <Grid Background="Transparent">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal"/>
+                                    <VisualState x:Name="MouseOver"/>
+                                    <VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <DoubleAnimation Duration="0" Storyboard.TargetName="HorizontalTrack" Storyboard.TargetProperty="Opacity" To="0.1" />
+                                            <DoubleAnimation Duration="0" Storyboard.TargetName="VerticalTrack" Storyboard.TargetProperty="Opacity" To="0.1" />
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HorizontalFill" Storyboard.TargetProperty="Fill">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PhoneDisabledBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="VerticalFill" Storyboard.TargetProperty="Fill">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PhoneDisabledBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+
+                            <Grid x:Name="HorizontalTemplate">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="30"/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Rectangle x:Name="HorizontalTrack" IsHitTestVisible="False" Fill="Black"  Opacity="0.2" Grid.ColumnSpan="3" Height="20" Margin="0,22,0,50"/>
+                                <Rectangle x:Name="HorizontalFill" IsHitTestVisible="False" Fill="Black" Opacity="0.5" Grid.Column="0" Height="20" Margin="0,22,0,50"/>
+                                <RepeatButton x:Name="HorizontalTrackLargeChangeDecreaseRepeatButton" IsTabStop="False" Template="{StaticResource PhoneSimpleRepeatButton}" Grid.Column="0" />
+                                <RepeatButton x:Name="HorizontalTrackLargeChangeIncreaseRepeatButton" IsTabStop="False" Template="{StaticResource PhoneSimpleRepeatButton}" Grid.Column="2" />
+                                <Thumb x:Name="HorizontalThumb" Width="30" Margin="-1,-30,0,0" Grid.Column="1" Template="{StaticResource PhoneSimpleThumbHorizontal}" RenderTransformOrigin="0.5,0.5" CacheMode="BitmapCache"/>
+                            </Grid>
+
+                            <Grid x:Name="VerticalTemplate">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="0"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Rectangle x:Name="VerticalTrack" IsHitTestVisible="False" Fill="{TemplateBinding Background}" Opacity="0.2" Grid.RowSpan="3" Width="12" Margin="24,0"/>
+                                <Rectangle x:Name="VerticalFill" IsHitTestVisible="False" Fill="{TemplateBinding Foreground}" Grid.Row="2" Width="12" Margin="24,0"/>
+                                <RepeatButton x:Name="VerticalTrackLargeChangeDecreaseRepeatButton" IsTabStop="False" Template="{StaticResource PhoneSimpleRepeatButton}" Grid.Row="0"/>
+                                <RepeatButton x:Name="VerticalTrackLargeChangeIncreaseRepeatButton" IsTabStop="False" Template="{StaticResource PhoneSimpleRepeatButton}" Grid.Row="2"/>
+                                <Thumb x:Name="VerticalThumb" Height="1" Margin="0,-1,0,0" Grid.Row="1" Template="{StaticResource PhoneSimpleThumbVertical}" RenderTransformOrigin="0.5,0.5" CacheMode="BitmapCache"/>
+                            </Grid>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="PerformanceProgressBar" TargetType="ProgressBar">
+            <Setter Property="Foreground" Value="{StaticResource PhoneAccentBrush}"/>
+            <Setter Property="Background" Value="{StaticResource PhoneAccentBrush}"/>
+            <Setter Property="Maximum" Value="100"/>
+            <Setter Property="IsHitTestVisible" Value="False"/>
+            <Setter Property="Padding" Value="{StaticResource PhoneHorizontalMargin}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ProgressBar">
+                        <local:RelativeAnimatingContentControl HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+                            <local:RelativeAnimatingContentControl.Resources>
+                                <ExponentialEase EasingMode="EaseOut" Exponent="1" x:Key="ProgressBarEaseOut"/>
+                                <ExponentialEase EasingMode="EaseIn" Exponent="1" x:Key="ProgressBarEaseIn"/>
+                            </local:RelativeAnimatingContentControl.Resources>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Determinate"/>
+                                    <VisualState x:Name="Indeterminate">
+                                        <Storyboard RepeatBehavior="Forever" Duration="00:00:04.4">
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="IndeterminateRoot">
+                                                <DiscreteObjectKeyFrame KeyTime="0">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <Visibility>Visible</Visibility>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="DeterminateRoot">
+                                                <DiscreteObjectKeyFrame KeyTime="0">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <Visibility>Collapsed</Visibility>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00.0" Storyboard.TargetProperty="X" Storyboard.TargetName="R1TT">
+                                                <LinearDoubleKeyFrame KeyTime="00:00:00.0" Value="0.1"/>
+                                                <EasingDoubleKeyFrame KeyTime="00:00:00.5" Value="33.1" EasingFunction="{StaticResource ProgressBarEaseOut}"/>
+                                                <LinearDoubleKeyFrame KeyTime="00:00:02.0" Value="66.1"/>
+                                                <EasingDoubleKeyFrame KeyTime="00:00:02.5" Value="100.1" EasingFunction="{StaticResource ProgressBarEaseIn}"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00.2" Storyboard.TargetProperty="X" Storyboard.TargetName="R2TT">
+                                                <LinearDoubleKeyFrame KeyTime="00:00:00.0" Value="0.1"/>
+                                                <EasingDoubleKeyFrame KeyTime="00:00:00.5" Value="33.1" EasingFunction="{StaticResource ProgressBarEaseOut}"/>
+                                                <LinearDoubleKeyFrame KeyTime="00:00:02.0" Value="66.1"/>
+                                                <EasingDoubleKeyFrame KeyTime="00:00:02.5" Value="100.1" EasingFunction="{StaticResource ProgressBarEaseIn}"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00.4" Storyboard.TargetProperty="X" Storyboard.TargetName="R3TT">
+                                                <LinearDoubleKeyFrame KeyTime="00:00:00.0" Value="0.1"/>
+                                                <EasingDoubleKeyFrame KeyTime="00:00:00.5" Value="33.1" EasingFunction="{StaticResource ProgressBarEaseOut}"/>
+                                                <LinearDoubleKeyFrame KeyTime="00:00:02.0" Value="66.1"/>
+                                                <EasingDoubleKeyFrame KeyTime="00:00:02.5" Value="100.1" EasingFunction="{StaticResource ProgressBarEaseIn}"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00.6" Storyboard.TargetProperty="X" Storyboard.TargetName="R4TT">
+                                                <LinearDoubleKeyFrame KeyTime="00:00:00.0" Value="0.1"/>
+                                                <EasingDoubleKeyFrame KeyTime="00:00:00.5" Value="33.1" EasingFunction="{StaticResource ProgressBarEaseOut}"/>
+                                                <LinearDoubleKeyFrame KeyTime="00:00:02.0" Value="66.1"/>
+                                                <EasingDoubleKeyFrame KeyTime="00:00:02.5" Value="100.1" EasingFunction="{StaticResource ProgressBarEaseIn}"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00.8" Storyboard.TargetProperty="X" Storyboard.TargetName="R5TT">
+                                                <LinearDoubleKeyFrame KeyTime="00:00:00.0" Value="0.1"/>
+                                                <EasingDoubleKeyFrame KeyTime="00:00:00.5" Value="33.1" EasingFunction="{StaticResource ProgressBarEaseOut}"/>
+                                                <LinearDoubleKeyFrame KeyTime="00:00:02.0" Value="66.1"/>
+                                                <EasingDoubleKeyFrame KeyTime="00:00:02.5" Value="100.1" EasingFunction="{StaticResource ProgressBarEaseIn}"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00.0" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="R1">
+                                                <DiscreteDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                <DiscreteDoubleKeyFrame KeyTime="00:00:02.5" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00.2" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="R2">
+                                                <DiscreteDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                <DiscreteDoubleKeyFrame KeyTime="00:00:02.5" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00.4" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="R3">
+                                                <DiscreteDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                <DiscreteDoubleKeyFrame KeyTime="00:00:02.5" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00.6" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="R4">
+                                                <DiscreteDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                <DiscreteDoubleKeyFrame KeyTime="00:00:02.5" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00.8" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="R5">
+                                                <DiscreteDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                <DiscreteDoubleKeyFrame KeyTime="00:00:02.5" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Grid>
+                                <Grid x:Name="DeterminateRoot" Margin="{TemplateBinding Padding}" Visibility="Visible">
+                                    <Rectangle x:Name="ProgressBarTrack" Fill="{TemplateBinding Background}" Height="4" Opacity="0.1"/>
+                                    <Rectangle x:Name="ProgressBarIndicator" Fill="{TemplateBinding Foreground}" HorizontalAlignment="Left" Height="4"/>
+                                </Grid>
+                                <Border x:Name="IndeterminateRoot" Margin="{TemplateBinding Padding}" Visibility="Collapsed">
+                                    <Grid HorizontalAlignment="Left">
+                                        <Rectangle Fill="{TemplateBinding Foreground}" Height="8" IsHitTestVisible="False" Width="8" x:Name="R1" Opacity="1" CacheMode="BitmapCache">
+                                            <Rectangle.RenderTransform>
+                                                <TranslateTransform x:Name="R1TT"/>
+                                            </Rectangle.RenderTransform>
+                                        </Rectangle>
+                                        <Rectangle Fill="{TemplateBinding Foreground}" Height="8" IsHitTestVisible="False" Width="8" x:Name="R2" Opacity="1" CacheMode="BitmapCache">
+                                            <Rectangle.RenderTransform>
+                                                <TranslateTransform x:Name="R2TT"/>
+                                            </Rectangle.RenderTransform>
+                                        </Rectangle>
+                                        <Rectangle Fill="{TemplateBinding Foreground}" Height="8" IsHitTestVisible="False" Width="8" x:Name="R3" Opacity="1" CacheMode="BitmapCache">
+                                            <Rectangle.RenderTransform>
+                                                <TranslateTransform x:Name="R3TT"/>
+                                            </Rectangle.RenderTransform>
+                                        </Rectangle>
+                                        <Rectangle Fill="{TemplateBinding Foreground}" Height="8" IsHitTestVisible="False" Width="8" x:Name="R4" Opacity="1" CacheMode="BitmapCache">
+                                            <Rectangle.RenderTransform>
+                                                <TranslateTransform x:Name="R4TT"/>
+                                            </Rectangle.RenderTransform>
+                                        </Rectangle>
+                                        <Rectangle Fill="{TemplateBinding Foreground}" Height="8" IsHitTestVisible="False" Width="8" x:Name="R5" Opacity="1" CacheMode="BitmapCache">
+                                            <Rectangle.RenderTransform>
+                                                <TranslateTransform x:Name="R5TT"/>
+                                            </Rectangle.RenderTransform>
+                                        </Rectangle>
+                                    </Grid>
+                                </Border>
+                            </Grid>
+                        </local:RelativeAnimatingContentControl>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
+
+        <Style TargetType="ListBoxItem" x:Key="ToolBoxButtonContainerStyle">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Grid >
+                            <Grid.Resources>
+                                <Storyboard x:Name="Storyboard1">
+                                </Storyboard>
+                            </Grid.Resources>
+
+                            <VisualStateManager.VisualStateGroups>
+                                
+                                <VisualStateGroup x:Name="SelectionStates">
+
+                                    <VisualState x:Name="Unselected">
+                                        <Storyboard>
+                                            <ColorAnimation Storyboard.TargetName="MyBrush" Storyboard.TargetProperty="Color" To="Transparent" />
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Selected">
+                                        <Storyboard>
+                                            <ColorAnimation Storyboard.TargetName="MyBrush" Storyboard.TargetProperty="Color" To="{StaticResource PhoneAccentColor}" />
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            
+                            <Grid>
+
+                                <Border x:Name="BorderOfImage" BorderBrush="AntiqueWhite" BorderThickness="0">
+                                    <Grid x:Name="GrdToolBoxButton"  >
+                                        <Grid.Background>
+                                            <SolidColorBrush x:Name="MyBrush" Color="Transparent" />
+                                        </Grid.Background>
+
+                                        <Image Margin="10" Width="64" Height="64" Source="{Binding ImageSource}" Tag="{Binding Tag}" />
+
+                                        <Rectangle Margin="10" Fill="{Binding Color}" ></Rectangle>
+                                    </Grid>
+                                </Border>
+                            </Grid>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="ListBoxItem" x:Key="PreviewButtonContainerStyle">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Grid >
+                            <Grid.Resources>
+                                <Storyboard x:Name="Storyboard1">
+                                </Storyboard>
+                            </Grid.Resources>
+
+                            <VisualStateManager.VisualStateGroups>
+
+                                <VisualStateGroup x:Name="SelectionStates">
+
+                                    <VisualState x:Name="Unselected">
+                                        <Storyboard>
+                                            <ColorAnimation Storyboard.TargetName="MyBrush" Storyboard.TargetProperty="Color" To="Transparent" />
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Selected">
+                                        <Storyboard>
+                                            <ColorAnimation Storyboard.TargetName="MyBrush" Storyboard.TargetProperty="Color" To="{StaticResource PhoneAccentColor}" />
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+
+                            <Grid>
+
+                                <Border x:Name="BorderOfImage" BorderBrush="AntiqueWhite" BorderThickness="0">
+                                    <Grid x:Name="GrdToolBoxButton"  >
+                                        <Grid.Background>
+                                            <SolidColorBrush x:Name="MyBrush" Color="Transparent" />
+                                        </Grid.Background>
+
+                                        <Image Margin="10" Width="80" Height="80" Source="{Binding ImageSource}"  />
+                                    </Grid>
+                                </Border>
+                            </Grid>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
+        <DataTemplate x:Key="PivotHeaderTemplate">
+            <TextBlock x:Name="pivotHeader" Text="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}"
+						Style="{StaticResource PhoneTextTitle2Style}"
+                       FontSize="50" FontFamily="Segoe WP Light"                     
+						CacheMode="BitmapCache" Margin="-5,0,0,0" />
+        </DataTemplate>
+
+        <Style TargetType="TextBlock" x:Name="AboutContentHeader">
+            <Setter Property="FontSize" Value="20"></Setter>
+            <Setter Property="TextAlignment" Value="Right"></Setter>
+        </Style>
+
+        <Style TargetType="TextBlock" x:Name="AboutContent">
+            <Setter Property="FontSize" Value="20"></Setter>
+            <Setter Property="TextAlignment" Value="Left"></Setter>
+        </Style>
+
+        <Style x:Key="ApplicationHeader" TargetType="TextBlock">
+            <Setter Property="Text" Value="PHOT HUB"></Setter>
+            <Setter Property="Margin" Value="15,0,0,0"></Setter>
+        </Style>
+
+        <DataTemplate x:Key="pivotHeader" >
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}"
+						FontSize="40" 
+						CacheMode="BitmapCache"></TextBlock>
+            </StackPanel>
+        </DataTemplate>
+
+    </Application.Resources>
+
+    <Application.ApplicationLifetimeObjects>
+        <!--Required object that handles lifetime events for the application-->
+        <shell:PhoneApplicationService 
+            Launching="Application_Launching" Closing="Application_Closing" 
+            Activated="Application_Activated" Deactivated="Application_Deactivated"/>
+    </Application.ApplicationLifetimeObjects>
+
+
+
+
+</Application>

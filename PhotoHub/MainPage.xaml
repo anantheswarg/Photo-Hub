@@ -1,0 +1,141 @@
+﻿<phone:PhoneApplicationPage
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Custom="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
+    xmlns:controls="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls"
+    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit" 
+    x:Class="PhotoHub.MainPage"
+    mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="728"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    SupportedOrientations="Portrait" Orientation="Portrait"
+    shell:SystemTray.IsVisible="False" Loaded="PhoneApplicationPage_Loaded">
+
+    <!-- LayoutRoot is the root grid where all page content is placed -->
+    <Grid >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!--Page title-->
+        <TextBlock Grid.Row="0" Margin="12,20,0,0" Text="PHOTO HUB" Style="{StaticResource PhoneTextNormalStyle}"/>
+
+        <!-- Content grid that holds image gallery and both camera and gallery buttons -->
+        <Grid x:Name="GrdContent" Grid.Row="1" Margin="20,0,12,0" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="550"/>
+                <RowDefinition Height="130"/>
+            </Grid.RowDefinitions>
+
+            <!-- Picture gallery pivot grid-->
+            <Grid Grid.Row="0" VerticalAlignment="Top"  Height="540" >
+                <!-- Picture gallery pivot-->
+                <controls:Pivot LoadedPivotItem="PvtPictures_LoadedPivotItem"  x:Name="PvtPictures" Height="540" HeaderTemplate="{StaticResource pivotHeader}"  >
+
+                    <!-- Camera Roll -->
+                    <controls:PivotItem  Header="Camera Roll" Height="480"  FontSize="20" Margin="10,0,10,10">
+                        <Grid >
+                            <ListBox x:Name="LsbCameraPhotos" SelectionChanged="Photo_SelectionChanged" >
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel>
+                                            <Image Tag="{Binding Tag}" Source="{Binding Image}" Margin="5,5,10,10" Stretch="Fill" Height="120" Width="120"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <toolkit:WrapPanel Background="Transparent">
+                                        </toolkit:WrapPanel>
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                            </ListBox>
+                            <TextBlock x:Name="TxtCameraPhotosNothing" Text="Nothing here yet" FontSize="30" Visibility="Collapsed" Padding="0,5,0,0" TextWrapping="Wrap" />
+                        </Grid>
+                    </controls:PivotItem>
+
+                    <!-- Sample Pictures -->
+                    <controls:PivotItem Header="Sample Pictures" Height="480"  FontSize="20" Margin="10,10,10,10">
+                        <Grid >
+                            <ListBox x:Name="LsbSamplePictures" SelectionChanged="Photo_SelectionChanged" >
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel>
+                                            <Image Tag="{Binding Tag}" Source="{Binding Image}" Margin="5,5,10,10" Stretch="Fill" Height="120" Width="120" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <toolkit:WrapPanel Background="Transparent">
+                                        </toolkit:WrapPanel>
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                            </ListBox>
+                            <TextBlock x:Name="TxtFavoritesNothing" Text="Nothing here yet" FontSize="30" Visibility="Collapsed" Padding="0,5,0,0" TextWrapping="Wrap" />
+                        </Grid>
+                    </controls:PivotItem>
+
+                    <!-- Saved Pictures -->
+                    <controls:PivotItem Header="Saved Pictures" Height="480"  FontSize="20" Margin="10,10,10,10">
+                        <Grid >
+                            <ListBox x:Name="LsbSavedPicturesPhotos" SelectionChanged="Photo_SelectionChanged" >
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel>
+                                            <Image Tag="{Binding Tag}" Source="{Binding Image}" Margin="5,5,10,10" Stretch="Fill" Height="120" Width="120" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <toolkit:WrapPanel Background="Transparent">
+                                        </toolkit:WrapPanel>
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                            </ListBox>
+                            <TextBlock x:Name="TxtSavedPicturesNothing" Text="Nothing here yet" FontSize="30" Visibility="Collapsed" Padding="0,5,0,0" TextWrapping="Wrap" />
+                        </Grid>
+                    </controls:PivotItem>
+
+                </controls:Pivot>
+            </Grid>
+
+            <!-- Camera and gallery buttons grid -->
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width = "*"/>
+                    <ColumnDefinition Width ="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="0" x:Name="BtnCamera" Click="BtnCamera_Click"   Width="120" Height="120" >
+                    <Button.Content>
+                        <Image Margin="-25" Source="/Static/Icons/camera.png" Height="90" Width="90" />
+                    </Button.Content>
+                </Button>
+
+                <Button Grid.Column="1" x:Name="BtnGallery" Click="BtnGallery_Click" Width="120" Height="120" >
+                    <Button.Content>
+                        <Image Margin="-25" Source="/Static/Icons/gallery.png" Height="90" Width="90" />
+                    </Button.Content>
+                </Button>
+            </Grid>
+
+        </Grid>
+        <ProgressBar x:Name="ProgressBar" IsIndeterminate="True" Height="75" Grid.Row="1" Visibility="Collapsed" VerticalAlignment="Center" Style="{StaticResource PerformanceProgressBar}" />
+    </Grid>
+
+    <!-- Application Bar -->
+    <phone:PhoneApplicationPage.ApplicationBar>
+        <shell:ApplicationBar IsVisible="True" IsMenuEnabled="False">
+            <shell:ApplicationBarIconButton IconUri="/Static/Icons/help.png" Text="Help" Click="ApplicationBarButtonHelp_Click"/>
+        </shell:ApplicationBar>
+    </phone:PhoneApplicationPage.ApplicationBar>
+
+</phone:PhoneApplicationPage>
